@@ -5,8 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gin-gonic/gin"
-	_ "github.com/heroku/x/hmetrics/onload"
+	NodeTwitterAPI "github.com/vinitkumar/node-twitter-api"
 )
 
 func main() {
@@ -15,15 +14,12 @@ func main() {
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}
-
-	router := gin.New()
-	router.Use(gin.Logger())
-	router.LoadHTMLGlob("templates/*.tmpl.html")
-	router.Static("/static", "static")
-
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl.html", nil)
-	})
-
-	router.Run(":" + port)
+	http.HandleFunc("/", NodeTwitterAPI.BaseHandler)
+	http.HandleFunc("/currentuser", NodeTwitterAPI.UserHandler)
+	http.HandleFunc("/users", NodeTwitterAPI.UsersHandler)
+	http.HandleFunc("/tweet", NodeTwitterAPI.TweetHandler)
+	http.HandleFunc("/tweets", NodeTwitterAPI.TweetsHandler)
+	http.HandleFunc("/analytic", NodeTwitterAPI.AnalyticHandler)
+	http.HandleFunc("/analytics", NodeTwitterAPI.AnalyticsHandler)
+	http.ListenAndServe(port, nil)
 }
