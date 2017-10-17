@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,7 +11,6 @@ import (
 
 func main() {
 	port := os.Getenv("PORT")
-
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}
@@ -21,5 +21,7 @@ func main() {
 	http.HandleFunc("/tweets", NodeTwitterAPI.TweetsHandler)
 	http.HandleFunc("/analytic", NodeTwitterAPI.AnalyticHandler)
 	http.HandleFunc("/analytics", NodeTwitterAPI.AnalyticsHandler)
-	http.ListenAndServe(port, nil)
+	fmt.Println("Running the server on localhost" + port)
+
+	http.ListenAndServe(":"+port, nil)
 }
